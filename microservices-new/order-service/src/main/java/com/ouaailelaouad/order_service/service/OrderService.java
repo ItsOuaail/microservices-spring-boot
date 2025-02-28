@@ -1,5 +1,6 @@
 package com.ouaailelaouad.order_service.service;
 
+import com.ouaailelaouad.order_service.dto.InventoryResponse;
 import com.ouaailelaouad.order_service.dto.OrderLineItemsDto;
 import com.ouaailelaouad.order_service.dto.OrderRequest;
 import com.ouaailelaouad.order_service.model.Order;
@@ -16,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.rmi.server.UID;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,18 +39,33 @@ public class OrderService {
                 .stream()
                 .map(this::mapToDto)
                 .toList();
+
         order.setOrderLineItemsList(orderLineItems);
 
-        Boolean result = webClient.get()
-                .uri("http://localhost:8082/api/inventory/")
+        List<String> skuCodes = orderLineItems.stream()
+                .map(OrderLineItems::getSkuCode)
+                .toList();
+
+        // Call Inventory Service to check stock
+        InventoryResponse[] inventoryResponses = webClient.get()
+                .uri("http://localhost:8082/api/inventory",
+                        uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
-                .bodyToMono(Boolean.class)
+                .bodyToMono(InventoryResponse[].class)
                 .block();
 
-        if (result) {
+        if (inventoryResponses == null || inventoryResponses.length == 0) {
+            throw new IllegalArgumentException("Inventory service returned no data");
+        }
+
+        boolean allProductsInStock = Arrays.stream(inventoryResponses)
+                .allMatch(InventoryResponse::isInStock);
+
+        if (allProductsInStock) {
             orderRepository.save(order);
+            log.info("Order {} placed successfully", order.getOrderNumber());
         } else {
-            throw new IllegalArgumentException("Product is not in stock, please try again later");
+            throw new IllegalArgumentException("One or more products are not in stock");
         }
     }
 
