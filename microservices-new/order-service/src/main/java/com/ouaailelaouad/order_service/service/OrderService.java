@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+//import org.springframework.web.reactive.function.client.WebClient;
 
 import java.rmi.server.UID;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final WebClient.Builder webClient;
+    private final WebClient webClient;
     private ObservationRegistry observationRegistry;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -37,7 +38,18 @@ public class OrderService {
                 .map(this::mapToDto)
                 .toList();
         order.setOrderLineItemsList(orderLineItems);
-        orderRepository.save(order);
+
+        Boolean result = webClient.get()
+                .uri("http://localhost:8082/api/inventory/")
+                .retrieve()
+                .bodyToMono(Boolean.class)
+                .block();
+
+        if (result) {
+            orderRepository.save(order);
+        } else {
+            throw new IllegalArgumentException("Product is not in stock, please try again later");
+        }
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
