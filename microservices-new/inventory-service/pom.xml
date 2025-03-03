@@ -38,7 +38,10 @@
             <version>1.18.28</version> <!-- Specify the version explicitly -->
             <scope>provided</scope>     <!-- This is the correct scope for Lombok -->
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
