@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/inventory-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/api-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/discovery-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/inventory-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/order-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/product-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices-new/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/product-service/src/main/java" charset="UTF-8" />
+  </component>
+</project>
